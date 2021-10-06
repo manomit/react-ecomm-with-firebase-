@@ -13,7 +13,6 @@ import { auth, createUserProfileDocument  } from './firebase/firebase.utils';
 import { setCurrentUser } from './redux/user/user.actions';
 
 import { selectCurrentUser } from './redux/user/user.selectors';
-
 class App extends React.Component {
   // constructor() {
   //   super();
@@ -51,6 +50,8 @@ class App extends React.Component {
       } else {
         // this.setState({currentUser: userAuth});
         setCurrentUser(userAuth);
+        // dumping data into firestore one time
+        // addCollectionAndDocuments("collections", collectionArray.map(({title, items}) => ({title, items})));
       }
     });
   }
