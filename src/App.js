@@ -8,11 +8,10 @@ import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import UserPage from './pages/user/user.component';
 import CheckoutPage from './pages/checkout/checkout.component';
-import { auth, createUserProfileDocument  } from './firebase/firebase.utils';
 
-import { setCurrentUser } from './redux/user/user.actions';
 
 import { selectCurrentUser } from './redux/user/user.selectors';
+import { checkUserSession } from "./redux/user/user.actions";
 class App extends React.Component {
   // constructor() {
   //   super();
@@ -25,35 +24,7 @@ class App extends React.Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    const { setCurrentUser } = this.props;
-    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
-      // createUserProfileDocument(user);
-      // this.setState({ currentUser: user });
-
-      if(userAuth) {
-        const userRef = await createUserProfileDocument(userAuth);
-
-        userRef.onSnapshot(snapShot => {
-          // this.setState({
-          //   currentUser: {
-          //     id: snapShot.id,
-          //     ...snapShot.data()
-          //   }
-          // }, () => {
-          //   console.log(thsi.state)
-          // })
-          setCurrentUser({
-            id: snapShot.id,
-            ...snapShot.data()
-          });
-        });
-      } else {
-        // this.setState({currentUser: userAuth});
-        setCurrentUser(userAuth);
-        // dumping data into firestore one time
-        // addCollectionAndDocuments("collections", collectionArray.map(({title, items}) => ({title, items})));
-      }
-    });
+    const { checkUserSession } = this.props;
   }
 
   componentWillUnmount() {
@@ -97,7 +68,8 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  checkUserSession: () => dispatch(checkUserSession())
 });
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
